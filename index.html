@@ -48,12 +48,30 @@
     button:hover {
       background-color: #34495e;
     }
+    .logo-holder {
+      display: flex;
+      align-items: center;
+    }
+    .img {
+      height: 100px;
+      width: 100px;
+      margin-right: 20px;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
   <h1>DIRECT DEPOSIT AUTHORIZATION FORM</h1>
-  <h2>COMPANY NAME</h2>
-  <p>RAH REAL ESTATE DEVELOPMENT AND TRANSPORTATION LIMITED</p>
+  <div class="logo-holder">
+    <img src="rahlogo.jpg" alt="Company Logo" class="img">
+    <div>
+      <h2>COMPANY NAME</h2>
+      <p>RAH REAL ESTATE DEVELOPMENT AND TRANSPORTATION LIMITED</p>
+    </div>
+  </div>
   <form id="depositForm">
     <p>
       <strong>FIRST NAME</strong><br>
@@ -100,12 +118,13 @@
     </p>
     <p>
       <strong>EMPLOYEE SIGNATURE</strong><br>
-      <input type="text" id="employeeSignature" name="employeeSignature" placeholder="Enter your name" required>
+      <canvas id="signatureCanvas" width="400" height="150"></canvas>
     </p>
     <button type="button" onclick="generatePDF()">Save as PDF</button>
   </form>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
   <script>
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
@@ -142,7 +161,6 @@
       const accountNumber = document.getElementById('accountNumber').value;
       const accountType = document.querySelector('input[name="accountType"]:checked').value;
       const authorization = document.getElementById('authorization').checked;
-      const employeeSignature = document.getElementById('employeeSignature').value;
 
       // Add form details
       doc.setFontSize(textFontSize);
@@ -156,11 +174,18 @@
       doc.text(`ACCOUNT NUMBER: ${accountNumber}`, marginLeft, startY + lineHeight * 11);
       doc.text(`TYPE OF ACCOUNT: ${accountType}`, marginLeft, startY + lineHeight * 12);
       doc.text(`AUTHORIZATION: ${authorization ? "Yes" : "No"}`, marginLeft, startY + lineHeight * 13);
-      doc.text(`EMPLOYEE SIGNATURE: ${employeeSignature}`, marginLeft, startY + lineHeight * 14);
+
+      // Add signature to PDF
+      const canvas = document.getElementById('signatureCanvas');
+      const dataURL = canvas.toDataURL(); // Convert canvas to base64 image
+      doc.addImage(dataURL, 'PNG', marginLeft, startY + lineHeight * 15, 150, 50); // Adjust position and size as needed
 
       // Save the PDF
       doc.save('Direct_Deposit_Authorization_Form.pdf');
     }
+
+    // Initialize signature pad
+    var signaturePad = new SignaturePad(document.getElementById('signatureCanvas'));
   </script>
 </body>
 </html>
