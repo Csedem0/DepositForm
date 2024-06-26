@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DIRECT DEPOSIT AUTHORIZATION FORM</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1, h2 {
+      color: #2c3e50;
+    }
+    h1 {
+      border-bottom: 2px solid #2c3e50;
+      padding-bottom: 10px;
+    }
+    h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    p, form {
+      margin: 10px 0;
+    }
+    form {
+      max-width: 600px;
+      margin: auto;
+    }
+    input[type="text"], input[type="radio"], input[type="checkbox"] {
+      margin-bottom: 10px;
+      padding: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    input[type="radio"], input[type="checkbox"] {
+      width: auto;
+      margin-right: 5px;
+    }
+    button {
+      background-color: #2c3e50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #34495e;
+    }
+  </style>
+</head>
+<body>
+  <h1>DIRECT DEPOSIT AUTHORIZATION FORM</h1>
+  <h2>COMPANY NAME</h2>
+  <p>RAH REAL ESTATE DEVELOPMENT AND TRANSPORTATION LIMITED</p>
+  <form id="depositForm">
+    <p>
+      <strong>FIRST NAME</strong><br>
+      <input type="text" id="firstName" name="firstName" required>
+    </p>
+    <p>
+      <strong>LAST NAME</strong><br>
+      <input type="text" id="lastName" name="lastName" required>
+    </p>
+    <p>
+      <strong>ADDRESS</strong><br>
+      <input type="text" id="address" name="address" required>
+    </p>
+    <p>
+      <strong>PHONE NUMBER</strong><br>
+      <input type="text" id="phoneNumber" name="phoneNumber" required>
+    </p>
+    <p>
+      <strong>CITY</strong><br>
+      <input type="text" id="city" name="city" required>
+    </p>
+    <p>
+      <strong>COUNTRY</strong><br>
+      <input type="text" id="country" name="country" required>
+    </p>
+    <p>
+      <strong>NAME OF BANK</strong><br>
+      <input type="text" id="bankName" name="bankName" required>
+    </p>
+    <p>
+      <strong>ACCOUNT NUMBER</strong><br>
+      <input type="text" id="accountNumber" name="accountNumber" required>
+    </p>
+    <p>
+      <strong>TYPE OF ACCOUNT</strong><br>
+      <input type="radio" name="accountType" value="CURRENT" required> CURRENT
+      <input type="radio" name="accountType" value="SAVINGS" required> SAVINGS
+    </p>
+    <h3>TERMS OF SERVICE</h3>
+    <p>
+      <input type="checkbox" id="authorization" name="authorization" required>
+      Our company is hereby authorized to directly deposit my pay to the account listed above. The
+      authorization will remain in effect until I modify or cancel it in writing.
+    </p>
+    <p>
+      <strong>EMPLOYEE SIGNATURE</strong><br>
+      <input type="text" id="employeeSignature" name="employeeSignature" placeholder="Enter your name" required>
+    </p>
+    <button type="button" onclick="generatePDF()">Save as PDF</button>
+  </form>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+  <script>
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Set styles
+      const titleFontSize = 20;
+      const subtitleFontSize = 16;
+      const textFontSize = 12;
+      const lineHeight = 10;
+      const marginLeft = 10;
+      const startY = 20;
+
+      // Add title
+      doc.setFontSize(titleFontSize);
+      doc.text("DIRECT DEPOSIT AUTHORIZATION FORM", marginLeft, startY);
+      
+      // Add company name
+      doc.setFontSize(subtitleFontSize);
+      doc.text("COMPANY NAME", marginLeft, startY + lineHeight);
+      
+      // Add company details
+      doc.setFontSize(textFontSize);
+      doc.text("RAH REAL ESTATE DEVELOPMENT AND TRANSPORTATION LIMITED", marginLeft, startY + lineHeight * 2);
+
+      // Get form values
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const address = document.getElementById('address').value;
+      const phoneNumber = document.getElementById('phoneNumber').value;
+      const city = document.getElementById('city').value;
+      const country = document.getElementById('country').value;
+      const bankName = document.getElementById('bankName').value;
+      const accountNumber = document.getElementById('accountNumber').value;
+      const accountType = document.querySelector('input[name="accountType"]:checked').value;
+      const authorization = document.getElementById('authorization').checked;
+      const employeeSignature = document.getElementById('employeeSignature').value;
+
+      // Add form details
+      doc.setFontSize(textFontSize);
+      doc.text(`FIRST NAME: ${firstName}`, marginLeft, startY + lineHeight * 4);
+      doc.text(`LAST NAME: ${lastName}`, marginLeft, startY + lineHeight * 5);
+      doc.text(`ADDRESS: ${address}`, marginLeft, startY + lineHeight * 6);
+      doc.text(`PHONE NUMBER: ${phoneNumber}`, marginLeft, startY + lineHeight * 7);
+      doc.text(`CITY: ${city}`, marginLeft, startY + lineHeight * 8);
+      doc.text(`COUNTRY: ${country}`, marginLeft, startY + lineHeight * 9);
+      doc.text(`NAME OF BANK: ${bankName}`, marginLeft, startY + lineHeight * 10);
+      doc.text(`ACCOUNT NUMBER: ${accountNumber}`, marginLeft, startY + lineHeight * 11);
+      doc.text(`TYPE OF ACCOUNT: ${accountType}`, marginLeft, startY + lineHeight * 12);
+      doc.text(`AUTHORIZATION: ${authorization ? "Yes" : "No"}`, marginLeft, startY + lineHeight * 13);
+      doc.text(`EMPLOYEE SIGNATURE: ${employeeSignature}`, marginLeft, startY + lineHeight * 14);
+
+      // Save the PDF
+      doc.save('Direct_Deposit_Authorization_Form.pdf');
+    }
+  </script>
+</body>
+</html>
